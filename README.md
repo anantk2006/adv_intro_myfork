@@ -28,3 +28,9 @@ I like jupyter notebooks so I have provided [adv.ipynb](code/adv.ipynb), but if 
 - `project_lp` - I have provided this function which takes an input and projects it back to an $l_p$-norm of $\xi$
 - `accuracy` and `asr` - Accuracy provides accuracy on a batch, ASR computes the adversarial success rate on an entire dataset (or 1 - accuracy)
 - `show_attack` - Used to visualize your results
+
+### Useful Reading
+
+- [Intriguing Properties of Neural Networks](https://arxiv.org/pdf/1312.6199.pdf) - The first paper to discuss adversarial examples, a good read to understand basic ideas.
+- [Explaining and Harnessing Adversarial Examples](https://arxiv.org/pdf/1312.6199.pdf) - This paper introduces FGSM, has good ideas about Adversarial Examples
+- [Towards Deep Learning Models Resistant to Adversrial Attacks](https://arxiv.org/pdf/1706.06083.pdf) - This paper introduces PGD, strong paper that extends previous works
