@@ -32,7 +32,9 @@ def pgd(x, y, k, norm = np.inf, xi = 1e-1, step_size = 1e-2, epochs = 40, device
     attack = torch.normal(0, xi/4, x.shape, requires_grad = True) # using 4 to divide step size since normal distribution doesnt really go beyond that point
     for ep in range(epochs): #iterate over epochs
         attack_c = attack.detach().clone().requires_grad_(True)
-        preds = k(x+attack_c)        
+        preds = k(x+attack_c)
+        
+        
         loss = loss_fn(preds, y)
         loss.backward()
         attack = attack_c + torch.sign(attack_c.grad)*step_size
