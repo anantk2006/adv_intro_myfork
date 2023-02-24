@@ -23,11 +23,11 @@ def fgsm(x, y, k, norm = np.inf, xi = 1e-1, step_size = 1e-1, device = torch.dev
     loss_fn = torch.nn.CrossEntropyLoss()
     loss = loss_fn(preds, y)
     loss.backward()
-    attack = torch.sign(x.grad)*step_size
+    attack = torch.sign(x.grad)*step_size 
     return attack
 
 
-def pgd(x, y, k, norm = np.inf, xi = 1e-1, step_size = 1e-2, epochs = 40, device = torch.device('cpu')):
+def pgd(x, y, k, norm = np.inf, xi = 1e-1, step_size = 1e-2, epochs = 40, device = torch.device("cuda:0")):
     loss_fn = torch.nn.CrossEntropyLoss()
     attack = torch.normal(0, xi/4, x.shape, requires_grad = True) # using 4 to divide step size since normal distribution doesnt really go beyond that point
     for ep in range(epochs): #iterate over epochs
@@ -36,7 +36,8 @@ def pgd(x, y, k, norm = np.inf, xi = 1e-1, step_size = 1e-2, epochs = 40, device
         loss = loss_fn(preds, y)
         loss.backward()
         attack = attack_c + torch.sign(attack_c.grad)*step_size
-        attack = project_lp(attack, norm, xi, device = device)
+        attack = project_lp(attack, norm, xi, device = device) 
+        # after adding to attack, project back upon norm ball
     return attack
 
     
@@ -44,8 +45,8 @@ def pgd(x, y, k, norm = np.inf, xi = 1e-1, step_size = 1e-2, epochs = 40, device
 #Initial Test on Small Batch
 x, y = next(iter(test_loader))
 print('Base Batch Accuracy {}'.format(accuracy(mdl(x), y))) # Varies with batch, mine ~ 0.875
-print('FGSM Batch Accuracy: {}'.format(accuracy(mdl(x + fgsm(x, y, mdl)), y))) # Varies with batch, mine ~ 0
-print('PGD Batch Accuracy: {}'.format(accuracy(mdl(x + pgd(x, y, mdl)), y))) # Varies with batch, mine ~ 0
+print('FGSM Batch Accuracy: {}'.format(accuracy(mdl(x + fgsm(x, y, mdl, device = device)), y))) # Varies with batch, mine ~ 0
+print('PGD Batch Accuracy: {}'.format(accuracy(mdl(x + pgd(x, y, mdl, device = device)), y))) # Varies with batch, mine ~ 0
 
 #v = pgd(x, y, mdl)
 #show_attack(x, v, mdl)
